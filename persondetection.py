@@ -18,41 +18,44 @@ ct = CentroidTracker()
 targetID = -100000
 targetCentroid = []
 # initialize the cascade
-haar_upper_body_cascade = cv2.CascadeClassifier(
-    "C:/Users/rootw/Documents/Robotics/Senior Lab/Python test/data/HS.xml")
+# haar_upper_body_cascade = cv2.CascadeClassifier( 
+#     "C:/Users/rootw/Documents/Robotics/Senior Lab/Python test/data/HS.xml") #Uncomment these if on Windows and change route name cuz it somehow doesnt work without it
+haar_upper_body_cascade = cv2.CascadeClassifier("data/HS.xml")
 radius = 20
 
+
 def robotMoveDirection(centroid, center):
-    print(centroid , " ", center)
+    print(centroid, " ", center)
     cX = center[0]
     cY = center[1]
     targetX = centroid[0]
     targetY = centroid[1]
     diffX = cX-targetX
-    diffY=cY-targetY
-    hors="Move: "
-    verts=" and "
+    diffY = cY-targetY
+    hors = "Move: "
+    verts = " and "
     if targetX < cX-radius:
-        hors+="Left "+str(np.abs(diffX))+" pixels"
+        hors += "Left "+str(np.abs(diffX))+" pixels"
     elif targetX > cX+radius:
         hors += "Right "+str(np.abs(diffX))+" pixels"
     else:
-        hors=""
+        hors = ""
         verts = "Move: "
     if targetY < cY-radius:
         verts += "Up "+str(np.abs(diffY))+" pixels"
-    elif targetY>cY+radius:
+    elif targetY > cY+radius:
         verts += "Down "+str(np.abs(diffY))+" pixels"
     else:
-        verts=""
+        verts = ""
     return hors+verts
+
 
 def persondetection(cap):
     global targetID, targetCentroid
     # reading the frame
     ret, frame = cap.read()
-    centerX =-10000
-    centerY=-100000
+    centerX = -10000
+    centerY = -100000
     cColor = (0, 0, 255)
     # resizing for faster detection
     try:
@@ -69,8 +72,8 @@ def persondetection(cap):
             flags=cv2.CASCADE_SCALE_IMAGE
         )
        # print(upper_body)
-        if len(upper_body)>0:
-            (x,y,w,h)=upper_body[0]
+        if len(upper_body) > 0:
+            (x, y, w, h) = upper_body[0]
             # creates green color rectangle with a thickness size of 1
             centerX = (int)(x+w/2)
             centerY = (int)(y+h/2)
@@ -87,14 +90,17 @@ def persondetection(cap):
                 cColor = (0, 0, 255)
         objects = ct.update(upper_body)
         # checking if the id is the same as the one detected
-        if len(list(objects.items())) >0 :
+        if len(list(objects.items())) > 0:
             targetID = list(objects.items())[0][0]
             targetCentroid = list(objects.items())[0][1]
-            if targetCentroid[0]==centerX and targetCentroid[1]==centerY:
+            if targetCentroid[0] == centerX and targetCentroid[1] == centerY:
                 cv2.putText(frame, str(targetID), (targetCentroid[0], targetCentroid[1]),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                 cv2.circle(
                     frame, (targetCentroid[0], targetCentroid[1]), 4, (0, 255, 0), -1)
+        else:
+            targetID = -100000
+            targetCentroid = []
         print(robotMoveDirection(targetCentroid, (width/2, height/2)))
     except Exception as e:
         print(str(e))
@@ -102,6 +108,7 @@ def persondetection(cap):
         #threshold center lines
     cv2.circle(frame, (thresholdX, thresholdY), radius, cColor, 3)
     return frame
+
 
 cv2.startWindowThread()
 cap = cv2.VideoCapture(0)
