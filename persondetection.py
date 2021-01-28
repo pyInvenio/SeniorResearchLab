@@ -23,6 +23,8 @@ targetCentroid = []
 haar_upper_body_cascade = cv2.CascadeClassifier("data/HS.xml")
 radius = 20
 
+prevFrameTime =0
+newFrameTime=0
 
 def robotMoveDirection(centroid, center):
     print(centroid, " ", center)
@@ -51,13 +53,14 @@ def robotMoveDirection(centroid, center):
 
 
 def persondetection(cap):
-    global targetID, targetCentroid
+    global targetID, targetCentroid, newFrameTime, prevFrameTime
     # reading the frame
     ret, frame = cap.read()
     centerX = -10000
     centerY = -100000
     cColor = (0, 0, 255)
     # resizing for faster detection
+    
     try:
         frame = cv2.resize(frame, (width, height))
         # using a greyscale picture, also for faster detection
@@ -115,7 +118,12 @@ cap = cv2.VideoCapture(0)
 time.sleep(2)
 
 while(True):
+    newFrameTime = time.time()
+    fps = 1/(newFrameTime-prevFrameTime)
     frame = persondetection(cap)
+    prevFrameTime = newFrameTime
+    cv2.putText(frame, str(fps), (10, 20),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 3)
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
