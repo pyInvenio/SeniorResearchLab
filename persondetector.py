@@ -16,6 +16,8 @@ class PersonDetector():
         self.frameCaptureNumber=7
         self.thresholdX = int(width/2)
         self.thresholdY = (int)(height/2)
+        self.width=width
+        self.height=height
 
     def frameAdd(self):
         self.frameCount+=1
@@ -23,7 +25,7 @@ class PersonDetector():
         if self.frameCount%self.frameCaptureNumber==0:
             return True
         return False
-    def robotMoveDirection(centroid, center):
+    def robotMoveDirection(self, centroid, center):
         print(centroid, " ", center)
         cX = center[0]
         cY = center[1]
@@ -33,16 +35,16 @@ class PersonDetector():
         diffY = cY-targetY
         hors = "Move: "
         verts = " and "
-        if targetX < cX-radius:
+        if targetX < cX-self.radius:
             hors += "Left "+str(np.abs(diffX))+" pixels"
-        elif targetX > cX+radius:
+        elif targetX > cX+self.radius:
             hors += "Right "+str(np.abs(diffX))+" pixels"
         else:
             hors = ""
             verts = "Move: "
-        if targetY < cY-radius:
+        if targetY < cY-self.radius:
             verts += "Up "+str(np.abs(diffY))+" pixels"
-        elif targetY > cY+radius:
+        elif targetY > cY+self.radius:
             verts += "Down "+str(np.abs(diffY))+" pixels"
         else:
             verts = ""
@@ -54,7 +56,7 @@ class PersonDetector():
         centerX = -10000
         centerY = -100000
         cColor = (0, 0, 255)
-        if checkFrameCount():
+        if self.checkFrameCount():
             try:
             # using a greyscale picture, also for faster detection
                 gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
@@ -82,7 +84,7 @@ class PersonDetector():
                         cColor = (0, 255, 0)
                     else:
                         cColor = (0, 0, 255)
-                objects = updateObjectIDs(upper_body)
+                objects = self.updateObjectIDs(upper_body)
                 # checking if the id is the same as the one detected
                 if len(list(objects.items())) > 0:
                     targetID = list(objects.items())[0][0]
@@ -95,10 +97,12 @@ class PersonDetector():
                 else:
                     targetID = -100000
                     targetCentroid = []
-                print(robotMoveDirection(targetCentroid, (self.width/2, self.height/2)))
+                print(self.robotMoveDirection(targetCentroid, (self.width/2, self.height/2)))
             except Exception as e:
                 print(str(e))
                 return frame
             #threshold center lines
         cv2.circle(frame, (self.thresholdX, self.thresholdY), self.radius, cColor, 3)
         return frame
+    def release(self):
+        self.cap.release()
