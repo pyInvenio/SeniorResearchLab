@@ -10,7 +10,7 @@ class PersonDetector():
         self.targetID=-1000000
         self.targetCentroid = []
         self.radius=20
-        self.cap = CameraStream(width, height, camPort)
+        self.cap = CameraStream(width, height, camPort).start()
         self.haar_cascade = cv2.CascadeClassifier("data/HS.xml")
         self.frameCount=0
         self.frameCaptureNumber=7
