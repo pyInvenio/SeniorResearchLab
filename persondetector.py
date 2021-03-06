@@ -2,15 +2,15 @@ import cv2 as cv2
 import imutils as im
 import numpy as np
 from centroidtracker import CentroidTracker
-from camerastream import CameraStream
+from videostream import VideoStream
 
 class PersonDetector():
-    def __init__(self, width, height, camPort):
+    def __init__(self, usePiCamera, width, height, camPort):
         self.ct=CentroidTracker()
         self.targetID=-1000000
         self.targetCentroid = []
         self.radius=20
-        self.cap = CameraStream(width, height, camPort).start()
+        self.cap = VideoStream(usePiCamera, width, height, camPort).start()
         self.haar_cascade = cv2.CascadeClassifier("data/HS.xml")
         self.frameCount=0
         self.frameCaptureNumber=7

@@ -9,10 +9,10 @@ from camerastream import CameraStream
 import time
 
 cv2.startWindowThread()
-pDetector = PersonDetector(False, 600, 480, 0)
+pDetector = PersonDetector(600, 480, 0)
 time.sleep(2)
-prevFrameTime =0
-newFrameTime=0
+prevFrameTime = 0
+newFrameTime = 0
 while(True):
     newFrameTime = time.time()
     fps = 1/(newFrameTime-prevFrameTime)

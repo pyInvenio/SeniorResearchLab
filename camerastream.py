@@ -25,3 +25,5 @@ class CameraStream():
         return cv2.resize(frame, (self.width, self.height))
     def release(self):
         self.cap.release()
+    def stop(self):
+        self.cap.release()
