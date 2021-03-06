@@ -34,10 +34,59 @@ void setup() {
   myservo.write(90);
 }
 
+String[] splitCommand(String text, char splitChar) {
+    int splitCount = countSplitCharacters(text, splitChar);
+    String returnValue[splitCount];
+    int index = -1;
+    int index2;
+
+    for(int i = 0; i < splitCount - 1; i++) {
+        index = text.indexOf(splitChar, index + 1);
+        index2 = text.indexOf(splitChar, index + 1);
+
+        if(index2 < 0) index2 = text.length() - 1;
+        returnValue[i] = text.substring(index, index2);
+    }
+
+    return returnValue;
+}
+
+int countSplitCharacters(String text, char splitChar) {
+    int returnValue = 0;
+    int index = -1;
+
+    while (index > -1) {
+        index = text.indexOf(splitChar, index + 1);
+
+        if(index > -1) returnValue+=1;
+    }
+
+    return returnValue;
+}
+
 void receiveEvent(int howMany) {
   while (Wire.available()) { // loop through all but the last
-    int c = Wire.read(); // receive byte as a character
-    myservo.write(c);
+    String c = Wire.read(); // receive byte as a character
+    String arr[countSplitCharacters(c, '$')] = splitCommand(c, '$');
+    Serial.print(arr);
+//    if(method == "1"){
+//      
+//    }
+//    else if(method == "2"){
+//      
+//    }
+//    else if(method == "3") {
+//      
+//    }
+//    else if(method == "4"){
+//      
+//    }
+//    else{
+//      Serial.println("Error");
+//    }
+//    
+//    
+//    myservo.write(c);
   }
 }
 
