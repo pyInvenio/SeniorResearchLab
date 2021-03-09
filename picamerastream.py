@@ -11,8 +11,8 @@ class PiCameraStream():
         self.height = height
         self.camera = PiCamera()
         self.camera.resolution = (width, height)
-        self.camera.framerate(framerate)
-        self.rawCapture = PiRGBArray(self.camera, size = self.resolution)
+        self.camera.framerate=framerate
+        self.rawCapture = PiRGBArray(self.camera, size = self.camera.resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture, format ="bgr", use_video_port=True)
         self.frame = None
         self.stopped = False

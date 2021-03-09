@@ -52,7 +52,8 @@ class PersonDetector():
     def updateObjectIDs(self, upper_body):
         return self.ct.update(upper_body)
     def detectPerson(self):
-        frame = self.cap.getFrame()
+        capturedframe = self.cap.getFrame()
+        frame = capturedframe[0:self.height,0:int(self.width/2)]
         centerX = -10000
         centerY = -100000
         cColor = (0, 0, 255)
@@ -73,12 +74,15 @@ class PersonDetector():
                     # creates green color rectangle with a thickness size of 1
                     centerX = (int)(x+w/2)
                     centerY = (int)(y+h/2)
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
-                    cv2.line(frame, (centerX, y), (centerX, y+h), (255, 0, 0), 1)
-                    cv2.line(frame, (x, centerY), (x+w, centerY), (255, 0, 0), 1)
-                    cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 1)
+                    cv2.rectangle(capturedframe, (x, y),
+                                  (x + w, y + h), (0, 255, 0), 1)
+                    cv2.line(capturedframe, (centerX, y), (centerX, y+h), (255, 0, 0), 1)
+                    cv2.line(capturedframe, (x, centerY),
+                             (x+w, centerY), (255, 0, 0), 1)
+                    cv2.circle(capturedframe, (centerX, centerY),
+                               1, (0, 0, 255), 1)
                     # creates green color text with text size of 0.5 & thickness size of 2
-                    cv2.putText(frame, "Head and Shoulders Detected", (x + 5, y + 15),
+                    cv2.putText(capturedframe, "Head and Shoulders Detected", (x + 5, y + 15),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                     if np.abs(centerX-self.thresholdX) <= 20 and np.abs(centerY-self.thresholdY) <= 20:
                         cColor = (0, 255, 0)
@@ -90,19 +94,20 @@ class PersonDetector():
                     targetID = list(objects.items())[0][0]
                     targetCentroid = list(objects.items())[0][1]
                     if targetCentroid[0] == centerX and targetCentroid[1] == centerY:
-                        cv2.putText(frame, str(targetID), (targetCentroid[0], targetCentroid[1]),
+                        cv2.putText(capturedframe, str(targetID), (targetCentroid[0], targetCentroid[1]),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                         cv2.circle(
-                            frame, (targetCentroid[0], targetCentroid[1]), 4, (0, 255, 0), -1)
+                            capturedframe, (targetCentroid[0], targetCentroid[1]), 4, (0, 255, 0), -1)
                 else:
                     targetID = -100000
                     targetCentroid = []
                 print(self.robotMoveDirection(targetCentroid, (self.width/2, self.height/2)))
             except Exception as e:
                 print(str(e))
-                return frame
+                return capturedframe
             #threshold center lines
-        cv2.circle(frame, (self.thresholdX, self.thresholdY), self.radius, cColor, 3)
-        return frame
+        cv2.circle(capturedframe, (self.thresholdX,
+                                   self.thresholdY), self.radius, cColor, 3)
+        return capturedframe
     def release(self):
         self.cap.release()

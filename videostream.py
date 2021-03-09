@@ -1,10 +1,10 @@
 from camerastream import CameraStream
 
-
 class VideoStream:
     def __init__(self, usePiCamera, width, height, camPort):
         if usePiCamera:
             from picamerastream import PiCameraStream
+
             self.stream = PiCameraStream(width, height, framerate=30)
         else:
             self.stream = CameraStream(width, height, camPort)

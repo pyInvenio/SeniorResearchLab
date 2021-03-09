@@ -7,9 +7,10 @@ from centroidtracker import CentroidTracker
 from persondetector import PersonDetector
 from camerastream import CameraStream
 import time
-
+height = 480
+width = 600
 cv2.startWindowThread()
-pDetector = PersonDetector(False, 600, 480, 0)
+pDetector = PersonDetector(False, width*2, height, 0)
 time.sleep(2)
 prevFrameTime =0
 newFrameTime=0
