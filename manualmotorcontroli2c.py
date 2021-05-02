@@ -1,11 +1,16 @@
 from tkinter import *
 from smbus2 import SMBus
-
+import os
+import sys
 
 addr = 0x8
 bus = SMBus(1)
 fired = False
 def slidercontrol():
+    if os.environ.get('DISPLAY', '') == '':
+        print('no display found. Using :0.0')
+        os.environ.__setitem__('DISPLAY', ':0.0')
+
     master = Tk()
     angServo = Scale(master, from_=0, to=270)
     angServo.pack()
