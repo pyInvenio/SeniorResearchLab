@@ -2,9 +2,10 @@ from tkinter import *
 from smbus2 import SMBus
 import os
 import sys
-
+import time
 addr = 0x80
 bus = SMBus(1)
+time.sleep(1)
 fired = False
 def slidercontrol():
     if os.environ.get('DISPLAY', '') == '':
