@@ -42,6 +42,7 @@ def slidercontrol():
 def send(addr, value):
     print(addr,value)
     bus.write_byte(addr, value)
+    time.sleep(1)
 
 def firedCmd():
     if fired:
