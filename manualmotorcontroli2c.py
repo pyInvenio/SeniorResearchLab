@@ -3,7 +3,7 @@ from smbus2 import SMBus
 import os
 import sys
 
-addr = 0x8
+addr = 0x80
 bus = SMBus(1)
 fired = False
 def slidercontrol():
