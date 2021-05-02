@@ -9,7 +9,7 @@ def slidercontrol():
     master = Tk()
     angServo = Scale(master, from_=0, to=270)
     angServo.pack()
-    horiMotor = Scale(master, from_=0, to=100, orient=HORIZONTAL)
+    horiMotor = Scale(master, from_=0, to=254, orient=HORIZONTAL)
     horiMotor.pack()
     fireBtn = Button(master, text='Fire', bd='5', command=firedCmd)
     fireBtn.pack()
@@ -36,7 +36,7 @@ def slidercontrol():
 #write to arduino
 def send(addr, value):
     print(addr,value)
-   # bus.write_byte(addr, value)
+    bus.write_byte(addr, value)
 
 def firedCmd():
     if fired:

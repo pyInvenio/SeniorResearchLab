@@ -4,7 +4,8 @@ from threading import Thread
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
-
+import RPi.GPIO as gp
+import os
 class PiCameraStream():
     def __init__(self, width, height, framerate):
         self.width = width
